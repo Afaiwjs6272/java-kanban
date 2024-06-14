@@ -1,10 +1,12 @@
+package task4;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    ArrayList<SubTask> subTaskList = new ArrayList<>();
+    private ArrayList<SubTask> subTaskList = new ArrayList<>();
 
-    public Epic(String taskName, String description, Status status) {
-        super(taskName, description, status);
+    public Epic(String taskName, String description) {
+        super(taskName, description,Status.NEW);
     }
 
     public void addSubTask (SubTask subTask){
@@ -13,7 +15,16 @@ public class Epic extends Task {
 
 
     public ArrayList<SubTask> getSubTaskList() {
-        return subTaskList;
+        return new ArrayList<>(subTaskList);
+    }
+
+    public void deleteSingleSubTask(int subTaskId) {
+        for (int i = 0; i < subTaskList.size(); i++) {
+            if (subTaskList.get(i).getId() == subTaskId) {
+                subTaskList.remove(i);
+                break;
+            }
+        }
     }
 
     public void setSubTasksList(ArrayList<SubTask> subTaskList) {

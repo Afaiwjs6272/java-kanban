@@ -1,3 +1,5 @@
+package task4;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -6,7 +8,7 @@ public class Main {
         Task washDish = new Task("помыть посуду","только ложки",Status.NEW);
         taskManager.addTask(washDish);
 
-        Epic putElephantInFridge = new Epic("положить слона в холодильник","в 3 действия",Status.NEW);
+        Epic putElephantInFridge = new Epic("положить слона в холодильник","в 3 действия");
         taskManager.addEpic(putElephantInFridge);
 
         SubTask openFridge = new SubTask("открыть холодильник","1 дейсвтие",Status.NEW,2);
@@ -18,11 +20,11 @@ public class Main {
         SubTask closeFridge = new SubTask("закрыть холодильник","3 дейсвтие",Status.NEW,2);
         taskManager.addSub(closeFridge);
 
-        taskManager.printTasks();
+        taskManager.getAllTasks();
 
-        taskManager.printEpics();
+        taskManager.getAllEpics();
 
-        taskManager.printSubTasks();
+        taskManager.getAllSubTasks();
 
         taskManager.printEpicById(2);
 
@@ -31,7 +33,7 @@ public class Main {
         washDish.setStatus(Status.IN_PROGRESS);
         taskManager.updateTask(washDish);
 
-        taskManager.printTasks();
+        taskManager.getAllTasks();
 
     }
 }

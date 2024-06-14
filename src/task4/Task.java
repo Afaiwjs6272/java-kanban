@@ -1,9 +1,9 @@
-import java.util.Objects;
+package task4;
 
 public class Task {
     private String taskName;
     private String description;
-    Status status;
+    private Status status;
     private int id;
 
     public Task(String taskName, String description, Status status) {
