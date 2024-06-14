@@ -42,21 +42,9 @@ public class TaskManager {
     }
 
     public void updateEpic(Epic epic) {
-        if (!epics.containsKey(epic.getId())) {
-            System.out.println("Эпик не найден");
-        } else {
-            boolean statusConsistent = true;
-            for (SubTask subTask : epic.getSubTaskList()) {
-                if (subTask.getStatus()!= epic.getStatus()) {
-                    statusConsistent = false;
-                    break;
-                }
-            }
-            if (statusConsistent) {
-                epics.put(epic.getId(), epic);
-            } else {
-                System.out.println("Статус эпика не согласован со статусами всех подзадач");
-            }
+        if (epics.containsKey(epic.getId())) {
+            epics.replace(epic.getId(), epic);
+            syncEpic(epic);
         }
     }
 
@@ -152,7 +140,7 @@ public class TaskManager {
 
 
     public ArrayList<SubTask> getSubtaskByEpic(int epicId) {
-        if (!subTasks.containsKey(epicId)) {
+        if (!epics.containsKey(epicId)) {
             return null;
         }
         Epic epic = epics.get(epicId);
