@@ -43,9 +43,20 @@ public class TaskManager {
 
     public void updateEpic(Epic epic) {
         if (!epics.containsKey(epic.getId())) {
-            System.out.println("айдишник не найден");
+            System.out.println("Эпик не найден");
         } else {
-            tasks.put(epic.getId(), epic);
+            boolean statusConsistent = true;
+            for (SubTask subTask : epic.getSubTaskList()) {
+                if (subTask.getStatus()!= epic.getStatus()) {
+                    statusConsistent = false;
+                    break;
+                }
+            }
+            if (statusConsistent) {
+                epics.put(epic.getId(), epic);
+            } else {
+                System.out.println("Статус эпика не согласован со статусами всех подзадач");
+            }
         }
     }
 
@@ -103,10 +114,6 @@ public class TaskManager {
     }
 
     public void deleteByEpicId(int id) {
-        if (!epics.containsKey(id)) {
-            System.out.println("Эпик с указанным ID не найден.");
-            return;
-        }
         Epic epic = epics.get(id);
         if (epic!= null) {
             ArrayList<SubTask> epics = epic.getSubTaskList();
@@ -125,24 +132,22 @@ public class TaskManager {
             int epicID = subTask.getEpicId();
             subTasks.remove(id);
             Epic epic = epics.get(epicID);
-            ArrayList<SubTask> subTasksList = epic.getSubTaskList();
-            subTasksList.remove(subTask);
-            epic.setSubTasksList(subTasksList);
+            epic.deleteSingleSubTask(id);
             syncEpic(epic);
         }
     }
 
 
     public Task printTaskById(int id) {
-        return tasks.getOrDefault(id, null);
+        return tasks.get(id);
     }
 
     public SubTask printSubById(int id) {
-        return subTasks.getOrDefault(id, null);
+        return subTasks.get(id);
     }
 
     public Epic printEpicById(int id) {
-        return epics.getOrDefault(id, null);
+        return epics.get(id);
     }
 
 
