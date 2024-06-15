@@ -41,12 +41,14 @@ public class TaskManager {
         }
     }
 
-    public void updateEpic(Epic epic) {
-        if (epics.containsKey(epic.getId())) {
-            epics.replace(epic.getId(), epic);
-            syncEpic(epic);
+    public void updateEpic(Epic newEpic){
+        Epic oldEpic = epics.get(newEpic.getId());
+        if(oldEpic != null){
+            oldEpic.setTaskName(newEpic.getTaskName());
+            oldEpic.setDescription(newEpic.getDescription());
         }
     }
+
 
     public void updateSub(SubTask sub) {
         if (!subTasks.containsKey(sub.getId())) {
