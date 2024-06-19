@@ -1,12 +1,12 @@
-package task4;
+package model;
 
 import java.util.ArrayList;
 
-public class Epic extends task4.Task {
+public class Epic extends Task {
     private ArrayList<SubTask> subTaskList = new ArrayList<>();
 
     public Epic(String taskName, String description) {
-        super(taskName, description,Status.NEW);
+        super(taskName, description, Status.NEW);
     }
 
     public void addSubTask (SubTask subTask){
