@@ -5,20 +5,20 @@ import service.HistoryManager;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    TasksId tasksId = new TasksId();
+    List<Task> history = new ArrayList<>(10);
 
 
     @Override
     public void add(Task task) {
-        if (tasksId.tasksHistory.size() == 10){
-            tasksId.tasksHistory.removeFirst();
+        if (history.size() == 10){
+            history.remove(0);
         } else {
-            tasksId.tasksHistory.addLast(task);
+            history.add(task);
         }
     }
 
     @Override
-    public LinkedList<Task> getHistory() {
-        return tasksId.tasksHistory;
+    public List<Task> getHistory() {
+        return history;
     }
 }

@@ -7,6 +7,6 @@ import java.util.*;
 public interface HistoryManager {
     void add(Task task);
 
-    LinkedList<Task> getHistory();
+    List<Task> getHistory();
 }
 

@@ -155,7 +155,7 @@ class InMemoryTaskManagerTest {
         manager.addSub(subTask);
         manager.addSub(subTask1);
 
-        ArrayList<SubTask> subs = manager.getSubtaskByEpic(1);
+        List<SubTask> subs = manager.getSubtaskByEpic(1);
 
         assertEquals(2,subs.size());
     }
@@ -167,7 +167,7 @@ class InMemoryTaskManagerTest {
         manager.addTask(task);
         manager.deleteByTaskId(1);
 
-        ArrayList<Task> tasks = manager.getAllTasks();
+        List<Task> tasks = manager.getAllTasks();
 
         assertTrue(tasks.isEmpty());
     }
@@ -182,7 +182,7 @@ class InMemoryTaskManagerTest {
         manager.addSub(subTask);
         manager.deleteBySubId(2);
 
-        ArrayList<SubTask> subs = manager.getAllSubTasks();
+        List<SubTask> subs = manager.getAllSubTasks();
 
         assertTrue(subs.isEmpty());
     }
@@ -199,7 +199,7 @@ class InMemoryTaskManagerTest {
         manager.addSub(subTask1);
         manager.deleteByEpicId(1);
 
-        ArrayList<SubTask> subTasks = manager.getAllSubTasks();
+        List<SubTask> subTasks = manager.getAllSubTasks();
         assertTrue(subTasks.isEmpty());
     }
 

@@ -10,29 +10,6 @@ import java.util.*;
 
 public interface TaskManager {
 
-    static void syncEpic(Epic epic) {
-        int doneSub = 0;
-        int newSub = 0;
-        ArrayList<SubTask> allSubTasks = epic.getSubTaskList();
-
-        for (SubTask subTask : allSubTasks) {
-            if (subTask.getStatus() == Status.NEW) {
-                newSub++;
-            }
-            if (subTask.getStatus() == Status.DONE) {
-                doneSub++;
-            }
-        }
-
-        if (newSub == allSubTasks.size()) {
-            epic.setStatus(Status.NEW);
-        } else if (doneSub == allSubTasks.size()) {
-            epic.setStatus(Status.DONE);
-        } else {
-            epic.setStatus(Status.IN_PROGRESS);
-        }
-    }
-
     void addTask(Task task);
 
     void addSub(SubTask sub);
@@ -45,11 +22,11 @@ public interface TaskManager {
 
     void updateSub(SubTask sub);
 
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
-    ArrayList<SubTask> getAllSubTasks();
+    List<SubTask> getAllSubTasks();
 
     void deleteTasks();
 
@@ -69,7 +46,7 @@ public interface TaskManager {
 
     Epic printEpicById(int id);
 
-    ArrayList<SubTask> getSubtaskByEpic(int epicId);
+    List<SubTask> getSubtaskByEpic(int epicId);
 
-    LinkedList<Task> getHistory();
+    List<Task> getHistory();
 }

@@ -1,6 +1,7 @@
 package service;
 
 import model.Epic;
+import model.Status;
 import model.SubTask;
 import model.Task;
 
@@ -8,10 +9,10 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HistoryManager history = new InMemoryHistoryManager();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, SubTask> subTasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final HistoryManager history = Managers.getDefaultHistory();
 
 
     @Override
@@ -28,7 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
             sub.setId(id);
             epic.addSubTask(sub);
             subTasks.put(sub.getId(), sub);
-            TaskManager.syncEpic(epic);
+            syncEpic(epic);
             id++;
         }
     }
@@ -73,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subTasksList.remove(oldSubTask);
                 subTasksList.add(sub);
                 epic.setSubTasksList(subTasksList);
-                TaskManager.syncEpic(epic);
+                syncEpic(epic);
             }
         }
     }
@@ -110,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.deleteSubTask();
-            TaskManager.syncEpic(epic);
+            syncEpic(epic);
         }
     }
 
@@ -142,23 +143,26 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.remove(id);
             Epic epic = epics.get(epicID);
             epic.deleteSingleSubTask(id);
-            TaskManager.syncEpic(epic);
+            syncEpic(epic);
         }
     }
 
 
     @Override
     public Task printTaskById(int id) {
+        history.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public SubTask printSubById(int id) {
+        history.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
     @Override
     public Epic printEpicById(int id) {
+        history.add(epics.get(id));
         return epics.get(id);
     }
 
@@ -173,8 +177,31 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public LinkedList<Task> getHistory() {
+    public List<Task> getHistory() {
         return history.getHistory();
+    }
+
+    private static void syncEpic(Epic epic) {
+        int doneSub = 0;
+        int newSub = 0;
+        ArrayList<SubTask> allSubTasks = epic.getSubTaskList();
+
+        for (SubTask subTask : allSubTasks) {
+            if (subTask.getStatus() == Status.NEW) {
+                newSub++;
+            }
+            if (subTask.getStatus() == Status.DONE) {
+                doneSub++;
+            }
+        }
+
+        if (newSub == allSubTasks.size()) {
+            epic.setStatus(Status.NEW);
+        } else if (doneSub == allSubTasks.size()) {
+            epic.setStatus(Status.DONE);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
+        }
     }
 }
 

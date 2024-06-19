@@ -1,4 +1,4 @@
-package model;
+package service;
 
 import service.*;
 public class Managers {
