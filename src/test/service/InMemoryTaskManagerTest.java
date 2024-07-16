@@ -33,7 +33,7 @@ class InMemoryTaskManagerTest {
         SubTask subTask = new SubTask("des","daee",Status.NEW,0);
         SubTask subTask1 = new SubTask("dws","dds",Status.NEW,0);
 
-        if (subTask1.getId() == subTask.getId()){
+        if (subTask1.getId() == subTask.getId()) {
             assertTrue(subTask.equals(subTask1));
         }
     }
@@ -43,7 +43,7 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("Tes","ders");
         Epic epic1 = new Epic("dssd","dcd");
 
-        if (epic.getId() == epic1.getId()){
+        if (epic.getId() == epic1.getId()) {
             assertTrue(epic.equals(epic1));
         }
     }
