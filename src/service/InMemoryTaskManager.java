@@ -51,9 +51,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic newEpic){
+    public void updateEpic(Epic newEpic) {
         Epic oldEpic = epics.get(newEpic.getId());
-        if(oldEpic != null){
+        if (oldEpic != null) {
             oldEpic.setTaskName(newEpic.getTaskName());
             oldEpic.setDescription(newEpic.getDescription());
         }
@@ -124,7 +124,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteByEpicId(int id) {
         Epic epic = epics.get(id);
-        if (epic!= null) {
+        if (epic != null) {
             ArrayList<SubTask> epics = epic.getSubTaskList();
             for (SubTask subTask : epics) {
                 subTasks.remove(subTask.getId());
@@ -138,7 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteBySubId(int id) {
         SubTask subTask = subTasks.get(id);
-        if (subTask!= null) {
+        if (subTask != null) {
             int epicID = subTask.getEpicId();
             subTasks.remove(id);
             Epic epic = epics.get(epicID);

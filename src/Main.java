@@ -44,8 +44,6 @@ public class Main {
         inMemoryTaskManager.getAllEpics();
 
         inMemoryTaskManager.printEpicById(2);
-
-
     }
 }
 
