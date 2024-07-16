@@ -28,7 +28,7 @@ public class Node {
         return data;
     }
 
-    public void setData(Task data){
+    public void setData(Task data) {
         this.data = data;
     }
 }
