@@ -29,14 +29,13 @@ class InMemoryHistoryManagerTest {
 
 
     @Test
-    void shouldDeleteFirstTask() {
+    void shouldDeleteFirstTask(){
         TaskManager manager = new InMemoryTaskManager();
         manager.addTask(new Task("r","f",Status.NEW));
         manager.addTask(new Task("rsad","fas",Status.NEW));
         manager.printTaskById(1);
         manager.printTaskById(1);
         manager.printTaskById(2);
-
         List<Task> history = manager.getHistory();
         assertEquals(history.size(),1);
     }
