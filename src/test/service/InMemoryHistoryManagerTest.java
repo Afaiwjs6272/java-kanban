@@ -19,7 +19,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void historyShouldNotBeClear(){
+    public void historyShouldNotBeClear() {
         Task task = new Task("r","f",Status.NEW);
         manager.add(task);
         final List<Task> history = manager.getHistory();
@@ -29,7 +29,7 @@ class InMemoryHistoryManagerTest {
 
 
     @Test
-    void shouldDeleteFirstTask(){
+    void shouldDeleteFirstTask() {
         TaskManager manager = new InMemoryTaskManager();
         manager.addTask(new Task("r","f",Status.NEW));
         manager.addTask(new Task("rsad","fas",Status.NEW));
