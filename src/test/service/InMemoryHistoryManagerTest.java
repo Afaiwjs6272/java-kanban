@@ -20,10 +20,10 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void historyShouldNotBeClear() {
-        Task task = new Task("r","f",Status.NEW);
+        Task task = new Task("r", "f", Status.NEW);
         manager.add(task);
         final List<Task> history = manager.getHistory();
-        assertEquals(1,history.size());
+        assertEquals(1, history.size());
         assertNotNull(history);
     }
 
@@ -31,12 +31,12 @@ class InMemoryHistoryManagerTest {
     @Test
     void shouldDeleteFirstTask() {
         TaskManager manager = new InMemoryTaskManager();
-        manager.addTask(new Task("r","f",Status.NEW));
-        manager.addTask(new Task("rsad","fas",Status.NEW));
+        manager.addTask(new Task("r", "f", Status.NEW));
+        manager.addTask(new Task("rsad", "fas", Status.NEW));
         manager.printTaskById(1);
         manager.printTaskById(1);
         manager.printTaskById(2);
         List<Task> history = manager.getHistory();
-        assertEquals(history.size(),1);
+        assertEquals(history.size(), 1);
     }
 }

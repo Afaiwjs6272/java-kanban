@@ -29,7 +29,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void checkSubTasksIdOnSame(){
+    public void checkSubTasksIdOnSame() {
         SubTask subTask = new SubTask("des","daee",Status.NEW,0);
         SubTask subTask1 = new SubTask("dws","dds",Status.NEW,0);
 
@@ -39,7 +39,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void checkEpicIdOnSame(){
+    public void checkEpicIdOnSame() {
         Epic epic = new Epic("Tes","ders");
         Epic epic1 = new Epic("dssd","dcd");
 
@@ -97,7 +97,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void tasksShouldBeClear(){
+    public void tasksShouldBeClear() {
         Task task = new Task("sdsa","sdaas",Status.NEW);
         Task task1 = new Task("dass","saasd",Status.NEW);
 
@@ -111,7 +111,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void subTasksShouldBeClear(){
+    public void subTasksShouldBeClear() {
         SubTask subTask = new SubTask("sdsa","sdaas",Status.NEW,1);
         SubTask subTask1 = new SubTask("dass","saasd",Status.NEW,1);
 
@@ -129,7 +129,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void epicsShouldBeClear(){
+    public void epicsShouldBeClear() {
         Epic epic = new Epic("sdsa","sdaas");
         Epic epic1 = new Epic("dass","saasd");
 
@@ -143,7 +143,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldReturnSubTaskByEpic(){
+    public void shouldReturnSubTaskByEpic() {
         assertNull(manager.getSubtaskByEpic(0));
 
         Epic epic = new Epic("SSSD","ddss");
@@ -161,7 +161,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldDeleteByTaskId(){
+    public void shouldDeleteByTaskId() {
         Task task = new Task("dsfs","dsff",Status.NEW);
 
         manager.addTask(task);
@@ -173,7 +173,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldDeleteBySubTaskId(){
+    public void shouldDeleteBySubTaskId() {
         Epic epic = new Epic("ddssf","dssf");
 
         SubTask subTask = new SubTask("dsad","dsfff",Status.NEW,1);
@@ -204,7 +204,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldUpdateTask(){
+    public void shouldUpdateTask() {
 
         manager.addTask(new Task("dssff","Ddss",Status.NEW));
         Task updatedTask = new Task("ssdff","dasdd",Status.NEW);
@@ -218,7 +218,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldUpdateSubTask(){
+    public void shouldUpdateSubTask() {
         manager.addEpic(new Epic("dssd","sssd"));
         manager.addSub(new SubTask("dssff","Ddss",Status.NEW,1));
         SubTask updatedSub = new SubTask("ssdff","dasdd",Status.NEW,1);
@@ -232,7 +232,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldUpdateEpic(){
+    public void shouldUpdateEpic() {
 
         manager.addEpic(new Epic("dssff","Ddss"));
         Epic updatedEpic = new Epic("ssdff","dasdd");
