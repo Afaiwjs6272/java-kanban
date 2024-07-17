@@ -1,15 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    private ArrayList<SubTask> subTaskList = new ArrayList<>();
+    private List<SubTask> subTaskList = new ArrayList<>();
 
     public Epic(String taskName, String description) {
         super(taskName, description, Status.NEW);
     }
 
-    public void addSubTask (SubTask subTask){
+    public void addSubTask(SubTask subTask) {
         subTaskList.add(subTask);
     }
 
@@ -31,7 +32,7 @@ public class Epic extends Task {
         this.subTaskList = subTaskList;
     }
 
-    public void deleteSubTask () {
+    public void deleteSubTask() {
         subTaskList.clear();
     }
 
