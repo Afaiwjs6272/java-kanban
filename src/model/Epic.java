@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
+    private Type type;
     private List<SubTask> subTaskList = new ArrayList<>();
 
     public Epic(String taskName, String description) {
         super(taskName, description, Status.NEW);
+        this.type = Type.EPIC;
+
     }
 
     public void addSubTask(SubTask subTask) {
@@ -34,6 +37,10 @@ public class Epic extends Task {
 
     public void deleteSubTask() {
         subTaskList.clear();
+    }
+
+    public Type getType(){
+        return type;
     }
 
 

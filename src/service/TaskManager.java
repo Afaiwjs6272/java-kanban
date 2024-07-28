@@ -4,21 +4,22 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public interface TaskManager {
 
-    void addTask(Task task);
+    void addTask(Task task) throws Exception;
 
-    void addSub(SubTask sub);
+    void addSub(SubTask sub) throws Exception;
 
-    void addEpic(Epic epic);
+    void addEpic(Epic epic) throws Exception;
 
-    void updateTask(Task task);
+    void updateTask(Task task) throws Exception;
 
-    void updateEpic(Epic newEpic);
+    void updateEpic(Epic newEpic) throws Exception;
 
-    void updateSub(SubTask sub);
+    void updateSub(SubTask sub) throws Exception;
 
     List<Task> getAllTasks();
 
@@ -26,17 +27,17 @@ public interface TaskManager {
 
     List<SubTask> getAllSubTasks();
 
-    void deleteTasks();
+    void deleteTasks() throws Exception;
 
-    void deleteEpics();
+    void deleteEpics() throws Exception;
 
-    void deleteSubTasks();
+    void deleteSubTasks() throws Exception;
 
-    void deleteByTaskId(int id);
+    void deleteByTaskId(int id) throws Exception;
 
-    void deleteByEpicId(int id);
+    void deleteByEpicId(int id) throws Exception;
 
-    void deleteBySubId(int id);
+    void deleteBySubId(int id) throws Exception;
 
     Task printTaskById(int id);
 

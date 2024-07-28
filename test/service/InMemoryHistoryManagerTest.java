@@ -1,4 +1,5 @@
-import model.*;
+import model.Status;
+import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.HistoryManager;
@@ -6,7 +7,7 @@ import service.InMemoryHistoryManager;
 import service.InMemoryTaskManager;
 import service.TaskManager;
 
-import java.util.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +31,7 @@ class InMemoryHistoryManagerTest {
 
 
     @Test
-    void shouldDeleteFirstTask() {
+    void shouldDeleteFirstTask() throws Exception {
         TaskManager manager = new InMemoryTaskManager();
         manager.addTask(new Task("r", "f", Status.NEW));
         manager.addTask(new Task("rsad", "fas", Status.NEW));
