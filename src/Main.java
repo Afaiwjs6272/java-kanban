@@ -65,17 +65,6 @@ public class Main {
 
         SubTask closeFridge = new SubTask("закрыть холодильник", "3 действие", Status.NEW, 2);
         taskManager.addSub(closeFridge);
-
-        FileBackedTaskManager.loadFromFile(new File("tasks.txt"));
-        File file = new File("tasks.txt");
-        try {
-            FileBackedTaskManager.loadFromFile(file);
-            for (Task task : taskManager.tasks) {
-                System.out.println(task.toString());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
 
