@@ -9,6 +9,6 @@ class ManagersTest {
     @Test
     public void shouldBeTheSameClass() {
         assertSame(InMemoryTaskManager.class, Managers.getDefault().getClass());
-        assertSame(InMemoryHistoryManager.class,Managers.getDefaultHistory().getClass());
+        assertSame(InMemoryHistoryManager.class, Managers.getDefaultHistory().getClass());
     }
 }

@@ -5,7 +5,7 @@ public class SubTask extends Task {
     private Type type;
 
     public SubTask(String taskName, String description, Status status, int epicId) {
-        super(taskName,description,status);
+        super(taskName, description, status);
         this.epicId = epicId;
         this.type = Type.SUBTASK;
     }
@@ -14,7 +14,7 @@ public class SubTask extends Task {
         return epicId;
     }
 
-    public Type getType(){
+    public Type getType() {
         return type;
     }
 
