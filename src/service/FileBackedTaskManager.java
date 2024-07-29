@@ -14,9 +14,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         savedFile = new File(path);
     }
 
-    public int getNextId() {
-        return ++this.nextId;
-    }
 
     private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(savedFile, StandardCharsets.UTF_8))) {
@@ -41,10 +38,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file) throws IOException {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file.getPath());
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             String line;
             boolean headersSkipped = false;
+            int maxId = 0;
             while ((line = br.readLine()) != null) {
                 if (!headersSkipped) {
                     headersSkipped = true;
@@ -53,13 +52,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 String[] splitText = line.split(",");
 
+                String id = splitText[0].trim();
                 String type = splitText[1].trim();
                 String statusStr = splitText[3].trim();
                 String name = splitText[2].trim();
                 String description = splitText[4].trim();
 
-                int newId = taskManager.getNextId();
+                int newId = Integer.parseInt(id);
                 Status status = Status.valueOf(statusStr);
+
+                if (newId > maxId) {
+                    maxId = newId;
+                }
 
                 if (type.equals("Task")) {
                     taskManager.tasks.put(newId, new Task(name, description, status));
@@ -72,6 +76,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     taskManager.epics.put(newId, epic);
                 }
             }
+            int nextId = maxId + 1;
+            manager.id = nextId;
+
             for (SubTask subTask : taskManager.subTasks.values()) {
                 Epic epic = taskManager.epics.get(subTask.getEpicId());
                 if (epic != null) {

@@ -69,6 +69,6 @@ public class Task {
     }
 
     public String toFileString() {
-        return id + ", " + type + ", " + taskName + ", " + status + ", " + description;
+        return id + "," + type + "," + taskName + "," + status + "," + description;
     }
 }

@@ -34,6 +34,6 @@ public class SubTask extends Task {
 
     @Override
     public String toFileString() {
-        return id + ", " + type + ", " + getTaskName() + ", " + getStatus() + ", " + getDescription() + ", " + getEpicId();
+        return id + "," + type + "," + getTaskName() + "," + getStatus() + "," + getDescription() + "," + getEpicId();
     }
 }
