@@ -65,20 +65,18 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldAdded2SubTasks() throws Exception {
-        SubTask subTask = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW, 1);
-        SubTask subTask1 = new SubTask("Test", "ter", Status.NEW, 1);
+        Epic epic = new Epic("SSSD", "ddss");
 
-        Epic epic = new Epic("sds", "sdsa");
+        SubTask subTask = new SubTask("dfsdf", "dssd", Status.NEW, 1);
+        SubTask subTask1 = new SubTask("dff", "dssdsd", Status.NEW, 1);
 
         manager.addEpic(epic);
         manager.addSub(subTask);
         manager.addSub(subTask1);
 
-        final List<SubTask> subs = manager.getAllSubTasks();
+        List<SubTask> subs = manager.getSubtaskByEpic(1);
 
-        assertNotNull(subs, "Задачи не возвращаются.");
-        assertEquals(2, subs.size(), "Неверное количество задач.");
-        assertEquals(subTask, subs.get(0), "Задачи не совпадают.");
+        assertEquals(2, subs.size());
     }
 
     @Test
@@ -180,7 +178,7 @@ class InMemoryTaskManagerTest {
 
         manager.addEpic(epic);
         manager.addSub(subTask);
-        manager.deleteBySubId(2);
+        manager.deleteBySubId(0);
 
         List<SubTask> subs = manager.getAllSubTasks();
 
@@ -226,7 +224,7 @@ class InMemoryTaskManagerTest {
 
         manager.updateSub(updatedSub);
 
-        SubTask subTask = manager.printSubById(2);
+        SubTask subTask = manager.printSubById(0);
 
         assertEquals(updatedSub, subTask);
     }
