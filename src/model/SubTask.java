@@ -1,8 +1,9 @@
 package model;
 
 public class SubTask extends Task {
-    private int epicId;
-    private Type type;
+    private final int epicId;
+    private int id;
+    private final Type type;
 
     public SubTask(String taskName, String description, Status status, int epicId) {
         super(taskName, description, status);
@@ -19,10 +20,20 @@ public class SubTask extends Task {
     }
 
     @Override
+    public int getId() {
+        return this.id;
+    }
+
+    @Override
     public String toString() {
         return "SUBTASK{ taskName = " + getTaskName() + '\'' +
                 ", description = " + getDescription() + '\'' +
                 ", id = " + epicId + '\'' +
                 ", status = " + getStatus() + " }";
+    }
+
+    @Override
+    public String toFileString() {
+        return id + ", " + type + ", " + getTaskName() + ", " + getStatus() + ", " + getDescription() + ", " + getEpicId();
     }
 }

@@ -8,9 +8,14 @@ import java.nio.charset.StandardCharsets;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private File savedFile;
+    private int nextId;
 
     public FileBackedTaskManager(String path) {
         savedFile = new File(path);
+    }
+
+    public int getNextId() {
+        return ++this.nextId;
     }
 
     private void save() {
@@ -18,7 +23,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             bw.write("id,type,name,status,description,epic");
             bw.newLine();
             for (Task task : tasks.values()) {
-                bw.write(task.toString());
+                bw.write(task.toFileString());
                 bw.newLine();
             }
             for (Epic task : epics.values()) {
@@ -26,7 +31,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 bw.newLine();
             }
             for (SubTask task : subTasks.values()) {
-                bw.write(task.toString());
+                bw.write(task.toFileString());
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -48,13 +53,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 String[] splitText = line.split(",");
 
-                String id = splitText[0].trim();
                 String type = splitText[1].trim();
                 String statusStr = splitText[3].trim();
                 String name = splitText[2].trim();
                 String description = splitText[4].trim();
 
-                int newId = Integer.parseInt(id);
+                int newId = taskManager.getNextId();
                 Status status = Status.valueOf(statusStr);
 
                 if (type.equals("Task")) {
@@ -63,7 +67,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     int parentTaskId = Integer.parseInt(splitText[5].trim());
                     taskManager.subTasks.put(newId, new SubTask(name, description, status, parentTaskId));
                 } else if (type.equals("Epic")) {
-                    taskManager.epics.put(newId, new Epic(name, description));
+                    Epic epic = new Epic(name, description);
+                    epic.setStatus(status);
+                    taskManager.epics.put(newId, epic);
+                }
+            }
+            for (SubTask subTask : taskManager.subTasks.values()) {
+                Epic epic = taskManager.epics.get(subTask.getEpicId());
+                if (epic != null) {
+                    epic.addSubTask(subTask);
                 }
             }
         } catch (IOException e) {
