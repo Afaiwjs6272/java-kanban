@@ -1,6 +1,7 @@
 package service;
 
 import model.Task;
+
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -9,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-      tasksHistory.linkLast(task);
+        tasksHistory.linkLast(task);
     }
 
     @Override

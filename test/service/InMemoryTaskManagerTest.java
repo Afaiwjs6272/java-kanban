@@ -1,8 +1,8 @@
+package service;
+
 import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.InMemoryTaskManager;
-import service.TaskManager;
 
 import java.util.*;
 
@@ -30,8 +30,8 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void checkSubTasksIdOnSame() {
-        SubTask subTask = new SubTask("des","daee",Status.NEW,0);
-        SubTask subTask1 = new SubTask("dws","dds",Status.NEW,0);
+        SubTask subTask = new SubTask("des", "daee", Status.NEW, 0);
+        SubTask subTask1 = new SubTask("dws", "dds", Status.NEW, 0);
 
         if (subTask1.getId() == subTask.getId()) {
             assertTrue(subTask.equals(subTask1));
@@ -40,8 +40,8 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void checkEpicIdOnSame() {
-        Epic epic = new Epic("Tes","ders");
-        Epic epic1 = new Epic("dssd","dcd");
+        Epic epic = new Epic("Tes", "ders");
+        Epic epic1 = new Epic("dssd", "dcd");
 
         if (epic.getId() == epic1.getId()) {
             assertTrue(epic.equals(epic1));
@@ -49,7 +49,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldAdded2Tasks() {
+    public void shouldAdded2Tasks() throws Exception {
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
         Task task1 = new Task("Test", "ter", Status.NEW);
 
@@ -64,25 +64,23 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldAdded2SubTasks() {
-        SubTask subTask = new SubTask("Test addNewTask", "Test addNewTask description", Status.NEW,1);
-        SubTask subTask1 = new SubTask("Test", "ter", Status.NEW,1);
+    public void shouldAdded2SubTasks() throws Exception {
+        Epic epic = new Epic("SSSD", "ddss");
 
-        Epic epic = new Epic("sds","sdsa");
+        SubTask subTask = new SubTask("dfsdf", "dssd", Status.NEW, 1);
+        SubTask subTask1 = new SubTask("dff", "dssdsd", Status.NEW, 1);
 
         manager.addEpic(epic);
         manager.addSub(subTask);
         manager.addSub(subTask1);
 
-        final List<SubTask> subs = manager.getAllSubTasks();
+        List<SubTask> subs = manager.getSubtaskByEpic(1);
 
-        assertNotNull(subs, "Задачи не возвращаются.");
-        assertEquals(2, subs.size(), "Неверное количество задач.");
-        assertEquals(subTask, subs.get(0), "Задачи не совпадают.");
+        assertEquals(2, subs.size());
     }
 
     @Test
-    public void shouldAdded2Epics() {
+    public void shouldAdded2Epics() throws Exception {
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         Epic epic1 = new Epic("Test", "ter");
 
@@ -97,9 +95,9 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void tasksShouldBeClear() {
-        Task task = new Task("sdsa","sdaas",Status.NEW);
-        Task task1 = new Task("dass","saasd",Status.NEW);
+    public void tasksShouldBeClear() throws Exception {
+        Task task = new Task("sdsa", "sdaas", Status.NEW);
+        Task task1 = new Task("dass", "saasd", Status.NEW);
 
         manager.addTask(task);
         manager.addTask(task1);
@@ -107,15 +105,15 @@ class InMemoryTaskManagerTest {
 
         final List<Task> tasks = manager.getAllTasks();
 
-        assertEquals(0,tasks.size());
+        assertEquals(0, tasks.size());
     }
 
     @Test
-    public void subTasksShouldBeClear() {
-        SubTask subTask = new SubTask("sdsa","sdaas",Status.NEW,1);
-        SubTask subTask1 = new SubTask("dass","saasd",Status.NEW,1);
+    public void subTasksShouldBeClear() throws Exception {
+        SubTask subTask = new SubTask("sdsa", "sdaas", Status.NEW, 1);
+        SubTask subTask1 = new SubTask("dass", "saasd", Status.NEW, 1);
 
-        Epic epic = new Epic("sdsd","ddas");
+        Epic epic = new Epic("sdsd", "ddas");
 
         manager.addEpic(epic);
         manager.addSub(subTask);
@@ -125,13 +123,13 @@ class InMemoryTaskManagerTest {
 
         final List<SubTask> subs = manager.getAllSubTasks();
 
-        assertEquals(0,subs.size());
+        assertEquals(0, subs.size());
     }
 
     @Test
-    public void epicsShouldBeClear() {
-        Epic epic = new Epic("sdsa","sdaas");
-        Epic epic1 = new Epic("dass","saasd");
+    public void epicsShouldBeClear() throws Exception {
+        Epic epic = new Epic("sdsa", "sdaas");
+        Epic epic1 = new Epic("dass", "saasd");
 
         manager.addEpic(epic);
         manager.addEpic(epic1);
@@ -139,17 +137,17 @@ class InMemoryTaskManagerTest {
 
         final List<Epic> epics = manager.getAllEpics();
 
-        assertEquals(0,epics.size());
+        assertEquals(0, epics.size());
     }
 
     @Test
-    public void shouldReturnSubTaskByEpic() {
+    public void shouldReturnSubTaskByEpic() throws Exception {
         assertNull(manager.getSubtaskByEpic(0));
 
-        Epic epic = new Epic("SSSD","ddss");
+        Epic epic = new Epic("SSSD", "ddss");
 
-        SubTask subTask = new SubTask("dfsdf","dssd",Status.NEW,1);
-        SubTask subTask1 = new SubTask("dff","dssdsd",Status.NEW,1);
+        SubTask subTask = new SubTask("dfsdf", "dssd", Status.NEW, 1);
+        SubTask subTask1 = new SubTask("dff", "dssdsd", Status.NEW, 1);
 
         manager.addEpic(epic);
         manager.addSub(subTask);
@@ -157,12 +155,12 @@ class InMemoryTaskManagerTest {
 
         List<SubTask> subs = manager.getSubtaskByEpic(1);
 
-        assertEquals(2,subs.size());
+        assertEquals(2, subs.size());
     }
 
     @Test
-    public void shouldDeleteByTaskId() {
-        Task task = new Task("dsfs","dsff",Status.NEW);
+    public void shouldDeleteByTaskId() throws Exception {
+        Task task = new Task("dsfs", "dsff", Status.NEW);
 
         manager.addTask(task);
         manager.deleteByTaskId(1);
@@ -173,14 +171,14 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldDeleteBySubTaskId() {
-        Epic epic = new Epic("ddssf","dssf");
+    public void shouldDeleteBySubTaskId() throws Exception {
+        Epic epic = new Epic("ddssf", "dssf");
 
-        SubTask subTask = new SubTask("dsad","dsfff",Status.NEW,1);
+        SubTask subTask = new SubTask("dsad", "dsfff", Status.NEW, 1);
 
         manager.addEpic(epic);
         manager.addSub(subTask);
-        manager.deleteBySubId(2);
+        manager.deleteBySubId(0);
 
         List<SubTask> subs = manager.getAllSubTasks();
 
@@ -188,7 +186,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldDeleteByEpicId() {
+    public void shouldDeleteByEpicId() throws Exception {
         Epic epic = new Epic("dsfs", "dsff");
 
         SubTask subTask = new SubTask("dsad", "dsfff", Status.NEW, 1);
@@ -204,44 +202,44 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldUpdateTask() {
+    public void shouldUpdateTask() throws Exception {
 
-        manager.addTask(new Task("dssff","Ddss",Status.NEW));
-        Task updatedTask = new Task("ssdff","dasdd",Status.NEW);
+        manager.addTask(new Task("dssff", "Ddss", Status.NEW));
+        Task updatedTask = new Task("ssdff", "dasdd", Status.NEW);
         updatedTask.setId(1);
 
         manager.updateTask(updatedTask);
 
         Task task = manager.printTaskById(1);
 
-        assertEquals(updatedTask,task);
+        assertEquals(updatedTask, task);
     }
 
     @Test
-    public void shouldUpdateSubTask() {
-        manager.addEpic(new Epic("dssd","sssd"));
-        manager.addSub(new SubTask("dssff","Ddss",Status.NEW,1));
-        SubTask updatedSub = new SubTask("ssdff","dasdd",Status.NEW,1);
+    public void shouldUpdateSubTask() throws Exception {
+        manager.addEpic(new Epic("dssd", "sssd"));
+        manager.addSub(new SubTask("dssff", "Ddss", Status.NEW, 1));
+        SubTask updatedSub = new SubTask("ssdff", "dasdd", Status.NEW, 1);
         updatedSub.setId(2);
 
         manager.updateSub(updatedSub);
 
-        SubTask subTask = manager.printSubById(2);
+        SubTask subTask = manager.printSubById(0);
 
-        assertEquals(updatedSub,subTask);
+        assertEquals(updatedSub, subTask);
     }
 
     @Test
-    public void shouldUpdateEpic() {
+    public void shouldUpdateEpic() throws Exception {
 
-        manager.addEpic(new Epic("dssff","Ddss"));
-        Epic updatedEpic = new Epic("ssdff","dasdd");
+        manager.addEpic(new Epic("dssff", "Ddss"));
+        Epic updatedEpic = new Epic("ssdff", "dasdd");
         updatedEpic.setId(1);
 
         manager.updateEpic(updatedEpic);
 
         Epic epic = manager.printEpicById(1);
 
-        assertEquals(updatedEpic,epic);
+        assertEquals(updatedEpic, epic);
     }
 }

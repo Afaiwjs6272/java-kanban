@@ -2,12 +2,12 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
-import service.InMemoryTaskManager;
+import service.FileBackedTaskManager;
 
 public class Main {
 
-    public static void main(String[] args) {
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+    public static void main(String[] args) throws Exception {
+        /* InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
         Task washDish = new Task("помыть посуду", "только ложки", Status.NEW);
         inMemoryTaskManager.addTask(washDish);
@@ -43,7 +43,25 @@ public class Main {
 
         inMemoryTaskManager.getAllEpics();
 
-        inMemoryTaskManager.printEpicById(2);
+        inMemoryTaskManager.printEpicById(2); */
+
+        FileBackedTaskManager taskManager = new FileBackedTaskManager("tasks.txt");
+
+
+        Task washDish = new Task("помыть посуду", "только ложки", Status.NEW);
+        taskManager.addTask(washDish);
+
+        Epic putElephantInFridge = new Epic("положить слона в холодильник", "в 3 действия");
+        taskManager.addEpic(putElephantInFridge);
+
+        SubTask openFridge = new SubTask("открыть холодильник", "1 действие", Status.NEW, 2);
+        taskManager.addSub(openFridge);
+
+        SubTask putElephant = new SubTask("положить слона", "2 действие", Status.NEW, 2);
+        taskManager.addSub(putElephant);
+
+        SubTask closeFridge = new SubTask("закрыть холодильник", "3 действие", Status.NEW, 2);
+        taskManager.addSub(closeFridge);
     }
 }
 
