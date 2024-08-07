@@ -6,7 +6,6 @@ import model.SubTask;
 import model.Task;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int id = 1;
