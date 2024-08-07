@@ -27,7 +27,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasksHistory.getTasks();
     }
 
-    public class DoublyLinkedList {
+    public static class DoublyLinkedList {
 
         private final Map<Integer, Node> history = new HashMap<>();
         public Node head;
