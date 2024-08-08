@@ -15,23 +15,23 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager history = Managers.getDefaultHistory();
 
     protected final Set<Task> taskSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
-    protected final Set<SubTask> subTaskSet = new TreeSet<>(Comparator.comparing(SubTask::getStartTime));
 
 
     @Override
     public void addTask(Task task) throws Exception {
-        boolean match = tasks.values().stream().anyMatch(addedTask -> doTheTasksOverlap(task, addedTask));
+        boolean match = taskSet.stream().anyMatch(addedTask -> doTheTasksOverlap(task, addedTask));
         if (match) {
-            throw new Exception("Задачи пересекаютс во времени");
+            throw new Exception("Задачи пересекаются во времени");
         }
         task.setId(id);
         id++;
         tasks.put(task.getId(), task);
+        taskSet.add(task);
     }
 
     @Override
     public void addSub(SubTask sub) throws Exception {
-        boolean match = subTasks.values().stream().anyMatch(addedSub -> doTheTasksOverlap(sub, addedSub));
+        boolean match = taskSet.stream().anyMatch(addedSub -> doTheTasksOverlap(sub, addedSub));
         if (match) {
             throw new Exception("Задачи пересекаютс во времени");
         }
@@ -40,6 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
             sub.setId(id);
             epic.addSubTask(sub);
             subTasks.put(sub.getId(), sub);
+            taskSet.add(sub);
             syncEpic(epic);
             id++;
         }
@@ -57,11 +58,13 @@ public class InMemoryTaskManager implements TaskManager {
         if (!tasks.containsKey(task.getId())) {
             System.out.println("айдишник не найден");
         } else {
-            boolean match = tasks.values().stream().anyMatch(addedTask -> doTheTasksOverlap(task, addedTask));
+            taskSet.removeIf(existingTask -> existingTask.getId() == (task.getId()));
+            boolean match = taskSet.stream().anyMatch(addedTask -> doTheTasksOverlap(task, addedTask));
             if (match) {
                 throw new Exception("Задачи пересекаютс во времени");
             }
             tasks.put(task.getId(), task);
+            taskSet.add(task);
         }
     }
 
@@ -80,7 +83,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (!subTasks.containsKey(sub.getId())) {
             System.out.println("айдишник не найден");
         } else {
-            boolean match = subTasks.values().stream().anyMatch(addedSub -> doTheTasksOverlap(sub, addedSub));
+            taskSet.removeIf(existingSub -> existingSub.getId() == (sub.getId()));
+            boolean match = taskSet.stream().anyMatch(addedSub -> doTheTasksOverlap(sub, addedSub));
             if (match) {
                 throw new Exception("Задачи пересекаютс во времени");
             }
@@ -119,6 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.keySet().stream()
                 .forEach(history::remove);
         tasks.clear();
+        taskSet.clear();
     }
 
 
@@ -131,6 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.keySet().stream()
                 .forEach(history::remove);
         subTasks.clear();
+        taskSet.clear();
     }
 
 
@@ -139,6 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.keySet().stream()
                 .forEach(history::remove);
         subTasks.clear();
+        taskSet.clear();
 
         epics.values().stream()
                 .forEach(epic -> {
@@ -152,6 +159,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteByTaskId(int id) throws Exception {
         tasks.remove(id);
         history.remove(id);
+        taskSet.removeIf(task -> task.getId() == id);
     }
 
     @Override
@@ -161,6 +169,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.getSubTaskList().forEach(subTask -> {
                 subTasks.remove(subTask.getId());
                 history.remove(subTask.getId());
+                taskSet.removeIf(sub -> sub.getId() == id);
             });
             epics.remove(id);
             history.remove(id);
@@ -175,6 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subTask != null) {
             int epicID = subTask.getEpicId();
             subTasks.remove(id);
+            taskSet.removeIf(sub -> sub.getId() == id);
             Epic epic = epics.get(epicID);
             epic.deleteSingleSubTask(id);
             syncEpic(epic);
@@ -216,29 +226,16 @@ public class InMemoryTaskManager implements TaskManager {
         return history.getHistory();
     }
 
-    public void addTaskToSet(Task task) {
-        taskSet.add(task);
-    }
-
-    public void addSubTaskToSet(SubTask sub) {
-        subTaskSet.add(sub);
-    }
 
     public Set<Task> getPrioritizedTasks() {
         return taskSet;
     }
 
-    public Set<SubTask> getPrioritizedSubTasks() {
-        return subTaskSet;
-    }
 
     public boolean doTheTasksOverlap(Task task, Task task1) {
         return task.getStartTime().isBefore(task1.getEndTime()) && task.getEndTime().isAfter(task1.getStartTime());
     }
 
-    public boolean doTheSubTasksOverlap(SubTask sub, SubTask sub1) {
-        return sub.getStartTime().isBefore(sub1.getEndTime()) && sub.getEndTime().isAfter(sub1.getStartTime());
-    }
 
     private static void syncEpic(Epic epic) {
         long newSub = epic.getSubTaskList().stream()
@@ -257,7 +254,6 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(Status.IN_PROGRESS);
         }
     }
-
 }
 
 

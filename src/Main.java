@@ -58,8 +58,6 @@ public class Main {
 
         manager.addTask(task);
         manager.addTask(task1);
-        manager.addTaskToSet(task);
-        manager.addTaskToSet(task1);
         manager.getAllTasks();
         manager.getPrioritizedTasks();
 

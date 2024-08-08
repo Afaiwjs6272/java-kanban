@@ -22,9 +22,11 @@ public class SubTask extends Task {
         return type;
     }
 
-    @Override
     public LocalDateTime getEndTime() {
-        return super.getEndTime();
+        if (getStartTime() == null) {
+            return null;
+        }
+        return getStartTime().plusMinutes(getDuration().toMinutes());
     }
 
     @Override

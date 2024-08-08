@@ -19,15 +19,25 @@ public class Epic extends Task {
         this.subTaskList = new ArrayList<>();
     }
 
+    public Epic(String taskName, String description) {
+        super(taskName, description, Status.NEW, null, null);
+        this.type = Type.EPIC;
+        this.subTaskList = new ArrayList<>();
+    }
 
     public Duration calculateEpicsDuration() {
-        return duration = subTaskList.stream()
+        Duration totalDuration = subTaskList.stream()
                 .map(SubTask::getDuration)
                 .reduce(Duration.ZERO, Duration::plus);
+        if (totalDuration == null) {
+            return null;
+        }
+        return totalDuration;
     }
 
     public LocalDateTime calculateEpicsStartTime() {
         return startTime = subTaskList.stream()
+                .filter(subTask -> subTask.getStartTime() != null)
                 .map(SubTask::getStartTime)
                 .min(LocalDateTime::compareTo)
                 .orElse(null);
@@ -35,6 +45,7 @@ public class Epic extends Task {
 
     public LocalDateTime calculateEpicsEndTime() {
         return endTime = subTaskList.stream()
+                .filter(subTask -> subTask.getStartTime() != null)
                 .map(SubTask::getEndTime)
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
@@ -66,22 +77,18 @@ public class Epic extends Task {
         return type;
     }
 
-    @Override
     public Duration getDuration() {
         return duration;
     }
 
-    @Override
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
-    @Override
     public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    @Override
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }

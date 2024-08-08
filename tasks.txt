@@ -1,0 +1,2 @@
+id,type,name,status,description,duration,startTime,epic
+EPIC{ name= положить слона в холодильник', description = в 3 действия', id = 1, status = NEW, duration = 3, startTime = 08.08.2024, 15:27}
