@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTasks() throws Exception {
         tasks.keySet().stream()
                 .forEach(history::remove);
-        tasks.clear();
+        taskSet.removeAll(tasks.values());
         taskSet.clear();
     }
 
@@ -136,7 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.keySet().stream()
                 .forEach(history::remove);
         subTasks.clear();
-        taskSet.clear();
+        taskSet.removeAll(subTasks.values());
     }
 
 
@@ -145,7 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.keySet().stream()
                 .forEach(history::remove);
         subTasks.clear();
-        taskSet.clear();
+        taskSet.removeAll(subTasks.values());
 
         epics.values().stream()
                 .forEach(epic -> {
@@ -253,6 +253,10 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
+
+        epic.setStartTime(epic.calculateEpicsStartTime());
+        epic.setDuration(epic.calculateEpicsDuration());
+        epic.calculateEpicsEndTime();
     }
 }
 
