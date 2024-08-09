@@ -123,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.keySet().stream()
                 .forEach(history::remove);
         taskSet.removeAll(tasks.values());
-        taskSet.clear();
+        tasks.clear();
     }
 
 
