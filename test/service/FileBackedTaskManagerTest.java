@@ -1,11 +1,14 @@
 package service;
 
+import exception.ManagerSaveException;
 import model.Status;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +29,7 @@ class FileBackedTaskManagerTest {
     @Test
     public void shouldAddOneTask() throws Exception {
         try {
-            Task task1 = new Task("asd", "gdhsj", Status.NEW);
+            Task task1 = new Task("asd", "gdhsj", Status.NEW, Duration.ofMinutes(10), LocalDateTime.of(2024, 8, 20, 15, 20));
 
             manager.addTask(task1);
 
@@ -64,9 +67,9 @@ class FileBackedTaskManagerTest {
     @Test
     public void testNewTaskManagerSameAsOld() throws Exception {
         try {
-            Task task1 = new Task("1", "Feature", Status.NEW);
-            Task task2 = new Task("2", "Bug", Status.IN_PROGRESS);
-            Task task3 = new Task("3", "Improvement", Status.DONE);
+            Task task1 = new Task("1", "Feature", Status.NEW, Duration.ofMinutes(11), LocalDateTime.of(2024, 8, 20, 14, 20));
+            Task task2 = new Task("2", "Bug", Status.IN_PROGRESS, Duration.ofMinutes(13), LocalDateTime.of(2024, 8, 20, 15, 22));
+            Task task3 = new Task("3", "Improvement", Status.DONE, Duration.ofMinutes(20), LocalDateTime.of(2024, 8, 20, 17, 20));
 
             FileBackedTaskManager oldTaskManager = new FileBackedTaskManager("tmp");
             oldTaskManager.addTask(task1);
@@ -82,5 +85,26 @@ class FileBackedTaskManagerTest {
         } catch (IOException e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    @Test
+    public void shouldThrowException() throws IOException {
+        temp = File.createTempFile("tmp", ".txt");
+        FileBackedTaskManager manager = new FileBackedTaskManager("tmp");
+        assertThrows(ManagerSaveException.class, () -> {
+            File file = new File("path/null");
+            manager.loadFromFile(file);
+        }, "Попытка обращения к несуществующему файлу");
+    }
+
+    @Test
+    public void shouldNotThrowException() throws IOException {
+        temp = File.createTempFile("tmp", ".txt");
+        FileBackedTaskManager manager = new FileBackedTaskManager(temp.getAbsolutePath());
+
+        // Проверяем, что загрузка из файла не вызывает исключения
+        assertDoesNotThrow(() -> {
+            manager.loadFromFile(temp);
+        }, "Попытка обращения к несуществующему файлу");
     }
 }

@@ -1,17 +1,25 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+
 public class Task {
     private String taskName;
     private String description;
     private Status status;
     private Type type;
+    private Duration duration;
+    private LocalDateTime startTime;
     private int id;
 
-    public Task(String taskName, String description, Status status) {
+    public Task(String taskName, String description, Status status, Duration duration, LocalDateTime startTime) {
         this.taskName = taskName;
         this.description = description;
         this.status = status;
         this.type = Type.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getTaskName() {
@@ -50,6 +58,29 @@ public class Task {
         return type;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (getStartTime() == null) {
+            return null;
+        }
+        return startTime.plusMinutes(duration.toMinutes());
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -69,6 +100,6 @@ public class Task {
     }
 
     public String toFileString() {
-        return id + "," + type + "," + taskName + "," + status + "," + description;
+        return id + "," + type + "," + taskName + "," + status + "," + description + getDuration() + "," + getStartTime();
     }
 }

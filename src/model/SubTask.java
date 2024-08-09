@@ -1,12 +1,15 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class SubTask extends Task {
     private final int epicId;
     private int id;
     private final Type type;
 
-    public SubTask(String taskName, String description, Status status, int epicId) {
-        super(taskName, description, status);
+    public SubTask(String taskName, String description, Status status, int epicId, Duration duration, LocalDateTime startTime) {
+        super(taskName, description, status, duration, startTime);
         this.epicId = epicId;
         this.type = Type.SUBTASK;
     }
@@ -17,6 +20,13 @@ public class SubTask extends Task {
 
     public Type getType() {
         return type;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (getStartTime() == null) {
+            return null;
+        }
+        return getStartTime().plusMinutes(getDuration().toMinutes());
     }
 
     @Override
@@ -34,6 +44,6 @@ public class SubTask extends Task {
 
     @Override
     public String toFileString() {
-        return id + "," + type + "," + getTaskName() + "," + getStatus() + "," + getDescription() + "," + getEpicId();
+        return id + "," + type + "," + getTaskName() + "," + getStatus() + "," + getDescription() + "," + getDuration() + "," + getStartTime() + "," + getEpicId();
     }
 }
