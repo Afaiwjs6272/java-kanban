@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import model.Epic;
-import model.Status;
 import model.SubTask;
 import model.Task;
 import model.adapter.DurationTypeAdapter;
@@ -24,7 +23,7 @@ import java.util.regex.Pattern;
 public class HttpTaskServer extends BaseHttpHandler {
     public static final int PORT = 8080;
     static GsonBuilder gsonBuilder;
-    private final static TaskManager taskManager = new InMemoryTaskManager();
+    private final TaskManager taskManager = new InMemoryTaskManager();
     private static HttpServer server;
     private static Gson gson;
 
@@ -36,12 +35,6 @@ public class HttpTaskServer extends BaseHttpHandler {
         gson = gsonBuilder.create();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/api/v1/tasks", new TaskHandler());
-    }
-
-   public static void main(String[] args) throws Exception {
-        HttpTaskServer server1 = new HttpTaskServer();
-        taskManager.addTask(new Task("assa","asda", Status.NEW,Duration.ZERO,LocalDateTime.now()));
-        server1.start();
     }
 
 
@@ -66,7 +59,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                                 sendText(httpExchange, response);
                                 break;
                             } else {
-                                sendNotFound(httpExchange,"Некорректный id - " + pathId);
+                                sendNotFound(httpExchange, "Некорректный id - " + pathId);
                             }
                         }
                         break;
@@ -84,7 +77,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                             }
                             httpExchange.sendResponseHeaders(201, 0);
                         } else {
-                            sendHasInteractions(httpExchange,"Задача пересекается с существующими");
+                            sendHasInteractions(httpExchange, "Задача пересекается с существующими");
                         }
                         break;
                     }
@@ -94,9 +87,9 @@ public class HttpTaskServer extends BaseHttpHandler {
                             int id = parsePathId(pathId);
                             if (id != -1 && id < taskManager.getAllTasks().size() + 1) {
                                 taskManager.deleteByTaskId(id);
-                                sendText(httpExchange,"Удалили задачу - " + id);
+                                sendText(httpExchange, "Удалили задачу - " + id);
                             } else {
-                                sendNotFound(httpExchange,"Неверный id - " + pathId);
+                                sendNotFound(httpExchange, "Неверный id - " + pathId);
                             }
                         }
                         break;
@@ -135,7 +128,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                                 sendText(httpExchange, response);
                                 break;
                             } else {
-                                sendNotFound(httpExchange,"Некорректный id - " + pathId);
+                                sendNotFound(httpExchange, "Некорректный id - " + pathId);
                             }
                         }
                         break;
@@ -153,7 +146,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                             }
                             httpExchange.sendResponseHeaders(201, 0);
                         } else {
-                            httpExchange.sendResponseHeaders(405,0);
+                            httpExchange.sendResponseHeaders(405, 0);
                         }
                         break;
                     }
@@ -163,7 +156,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                             int id = parsePathId(pathId);
                             if (id != -1 && id < taskManager.getAllEpics().size() + 1) {
                                 taskManager.deleteByEpicId(id);
-                                sendText(httpExchange,"Удалили эпик с id - " + id);
+                                sendText(httpExchange, "Удалили эпик с id - " + id);
                             } else {
                                 httpExchange.sendResponseHeaders(405, 0);
                             }
@@ -203,7 +196,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                                 sendText(httpExchange, response);
                                 break;
                             } else {
-                                sendNotFound(httpExchange,"Некорректный id - " + pathId);
+                                sendNotFound(httpExchange, "Некорректный id - " + pathId);
                             }
                         }
                         break;
@@ -221,7 +214,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                             }
                             httpExchange.sendResponseHeaders(201, 0);
                         } else {
-                           sendHasInteractions(httpExchange,"Подзадача пересекается с существующими");
+                            sendHasInteractions(httpExchange, "Подзадача пересекается с существующими");
                         }
                         break;
                     }
@@ -231,9 +224,9 @@ public class HttpTaskServer extends BaseHttpHandler {
                             int id = parsePathId(pathId);
                             if (id != -1 && id < taskManager.getAllSubTasks().size() + 1) {
                                 taskManager.deleteBySubId(id);
-                                sendText(httpExchange,"Удалили подзадачу - " + id);
+                                sendText(httpExchange, "Удалили подзадачу - " + id);
                             } else {
-                                sendNotFound(httpExchange,"Неверный id - " + pathId);
+                                sendNotFound(httpExchange, "Неверный id - " + pathId);
                             }
                         }
                         break;
@@ -251,7 +244,7 @@ public class HttpTaskServer extends BaseHttpHandler {
         }
     }
 
-    public static class HistoryHandler implements HttpHandler {
+    public class HistoryHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) {
             try {
@@ -260,7 +253,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                     String response = gson.toJson(taskManager.getHistory());
                     sendText(httpExchange, response);
                 } else {
-                    sendNotFound(httpExchange,"Задача не найдена");
+                    sendNotFound(httpExchange, "Задача не найдена");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -270,7 +263,7 @@ public class HttpTaskServer extends BaseHttpHandler {
         }
     }
 
-    public static class PrioritizedHandler implements HttpHandler {
+    public class PrioritizedHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) {
             try {
@@ -279,7 +272,7 @@ public class HttpTaskServer extends BaseHttpHandler {
                     String response = gson.toJson(taskManager.getPrioritizedTasks());
                     sendText(httpExchange, response);
                 } else {
-                   sendNotFound(httpExchange,"Задача не найдена");
+                    sendNotFound(httpExchange, "Задача не найдена");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
