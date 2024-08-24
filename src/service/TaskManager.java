@@ -4,7 +4,8 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -47,5 +48,6 @@ public interface TaskManager {
     List<SubTask> getSubtaskByEpic(int epicId);
 
     List<Task> getHistory();
+
     Set<Task> getPrioritizedTasks();
 }
