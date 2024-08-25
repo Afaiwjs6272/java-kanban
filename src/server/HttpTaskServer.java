@@ -14,10 +14,14 @@ import service.InMemoryTaskManager;
 import service.TaskManager;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 public class HttpTaskServer extends BaseHttpHandler {
@@ -68,19 +72,23 @@ public class HttpTaskServer extends BaseHttpHandler {
                         break;
                     }
                     case "POST": {
-                        if (Pattern.matches("^/api/v1/tasks/$", path)) {
+                        if (Pattern.matches("^/api/v1/tasks$", path)) {
                             String response = readText(httpExchange);
                             Task task = gson.fromJson(response, Task.class);
-                            boolean taskExists = taskManager.getAllTasks().stream()
-                                    .map(Task::getId)
-                                    .anyMatch(id -> id == task.getId());
-
-                            if (taskExists) {
-                                taskManager.updateTask(task);
-                            } else {
-                                taskManager.addTask(task);
+                            if (task != null) {
+                                if (taskManager.getAllTasks().stream().map(Task::getId).anyMatch(id -> id == task.getId())) {
+                                    taskManager.updateTask(task);
+                                    httpExchange.sendResponseHeaders(200, 0);
+                                } else {
+                                    taskManager.addTask(task);
+                                    String jsonResponse = gson.toJson(Map.of("id", task.getId()));
+                                    byte[] responseBody = jsonResponse.getBytes(UTF_8);
+                                    httpExchange.sendResponseHeaders(201, responseBody.length);
+                                    try (OutputStream os = httpExchange.getResponseBody()) {
+                                        os.write(responseBody);
+                                    }
+                                }
                             }
-                            httpExchange.sendResponseHeaders(201, task.getId());
                         } else {
                             sendHasInteractions(httpExchange, "Задача пересекается с существующими");
                         }
@@ -142,18 +150,22 @@ public class HttpTaskServer extends BaseHttpHandler {
                         if (Pattern.matches("^/api/v1/epics$", path)) {
                             String response = readText(httpExchange);
                             Epic epic = gson.fromJson(response, Epic.class);
-                            boolean epicExists = taskManager.getAllEpics().stream()
-                                    .map(Epic::getId)
-                                    .anyMatch(id -> id == epic.getId());
-
-                            if (epicExists) {
-                                taskManager.updateTask(epic);
-                            } else {
-                                taskManager.addTask(epic);
+                            if (epic != null) {
+                                if (taskManager.getAllEpics().stream().map(Epic::getId).anyMatch(id -> id == epic.getId())) {
+                                    taskManager.updateEpic(epic);
+                                    httpExchange.sendResponseHeaders(200, 0);
+                                } else {
+                                    taskManager.addEpic(epic);
+                                    String jsonResponse = gson.toJson(Map.of("id", epic.getId()));
+                                    byte[] responseBody = jsonResponse.getBytes(UTF_8);
+                                    httpExchange.sendResponseHeaders(201, responseBody.length);
+                                    try (OutputStream os = httpExchange.getResponseBody()) {
+                                        os.write(responseBody);
+                                    }
+                                }
                             }
-                            httpExchange.sendResponseHeaders(201, epic.getId());
                         } else {
-                            sendHasInteractions(httpExchange, "Задача пересекается с существующими");
+                            httpExchange.sendResponseHeaders(405, 0);
                         }
                         break;
                     }
@@ -212,18 +224,22 @@ public class HttpTaskServer extends BaseHttpHandler {
                         if (Pattern.matches("^/api/v1/subtasks$", path)) {
                             String response = readText(httpExchange);
                             SubTask sub = gson.fromJson(response, SubTask.class);
-                            boolean subExists = taskManager.getAllSubTasks().stream()
-                                    .map(SubTask::getId)
-                                    .anyMatch(id -> id == sub.getId());
-
-                            if (subExists) {
-                                taskManager.updateTask(sub);
-                            } else {
-                                taskManager.addTask(sub);
+                            if (sub != null) {
+                                if (taskManager.getAllSubTasks().stream().map(SubTask::getId).anyMatch(id -> id == sub.getId())) {
+                                    taskManager.updateSub(sub);
+                                    httpExchange.sendResponseHeaders(200, 0);
+                                } else {
+                                    taskManager.addSub(sub);
+                                    String jsonResponse = gson.toJson(Map.of("id", sub.getId()));
+                                    byte[] responseBody = jsonResponse.getBytes(UTF_8);
+                                    httpExchange.sendResponseHeaders(201, responseBody.length);
+                                    try (OutputStream os = httpExchange.getResponseBody()) {
+                                        os.write(responseBody);
+                                    }
+                                }
                             }
-                            httpExchange.sendResponseHeaders(201, sub.getId());
                         } else {
-                            sendHasInteractions(httpExchange, "Задача пересекается с существующими");
+                            sendHasInteractions(httpExchange, "Ползадача пересекается с существующими");
                         }
                         break;
                     }
