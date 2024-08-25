@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import model.Epic;
-import model.Status;
 import model.SubTask;
 import model.Task;
 import model.adapter.DurationTypeAdapter;
@@ -24,7 +23,7 @@ import java.util.regex.Pattern;
 public class HttpTaskServer extends BaseHttpHandler {
     public static final int PORT = 8080;
     static GsonBuilder gsonBuilder;
-    private final static TaskManager taskManager = new InMemoryTaskManager();
+    private final TaskManager taskManager = new InMemoryTaskManager();
     private static HttpServer server;
     private static Gson gson;
 
@@ -41,13 +40,6 @@ public class HttpTaskServer extends BaseHttpHandler {
         server.createContext("/api/v1/history", new HistoryHandler());
         server.createContext("/api/v1/prioritized", new PrioritizedHandler());
     }
-
-    public static void main(String[] args) throws Exception {
-        HttpTaskServer server1 = new HttpTaskServer();
-        taskManager.addTask(new Task("ass", "sass", Status.NEW, Duration.ZERO, LocalDateTime.now()));
-        server1.start();
-    }
-
 
     public class TaskHandler implements HttpHandler {
         @Override
