@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import model.Epic;
+import model.Status;
 import model.SubTask;
 import model.Task;
 import model.adapter.DurationTypeAdapter;
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
 public class HttpTaskServer extends BaseHttpHandler {
     public static final int PORT = 8080;
     static GsonBuilder gsonBuilder;
-    private final TaskManager taskManager = new InMemoryTaskManager();
+    private final static TaskManager taskManager = new InMemoryTaskManager();
     private static HttpServer server;
     private static Gson gson;
 
@@ -35,6 +36,16 @@ public class HttpTaskServer extends BaseHttpHandler {
         gson = gsonBuilder.create();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/api/v1/tasks", new TaskHandler());
+        server.createContext("/api/v1/subtasks", new SubTaskHandler());
+        server.createContext("/api/v1/epics", new EpicHandler());
+        server.createContext("/api/v1/history", new HistoryHandler());
+        server.createContext("/api/v1/prioritized", new PrioritizedHandler());
+    }
+
+    public static void main(String[] args) throws Exception {
+        HttpTaskServer server1 = new HttpTaskServer();
+        taskManager.addTask(new Task("ass", "sass", Status.NEW, Duration.ZERO, LocalDateTime.now()));
+        server1.start();
     }
 
 
@@ -65,17 +76,19 @@ public class HttpTaskServer extends BaseHttpHandler {
                         break;
                     }
                     case "POST": {
-                        if (Pattern.matches("^/api/v1/tasks$", path)) {
+                        if (Pattern.matches("^/api/v1/tasks/$", path)) {
                             String response = readText(httpExchange);
                             Task task = gson.fromJson(response, Task.class);
-                            if (task != null) {
-                                if (taskManager.getAllTasks().stream().map(Task::getId).anyMatch(id -> id == task.getId())) {
-                                    taskManager.updateTask(task);
-                                } else {
-                                    taskManager.addTask(task);
-                                }
+                            boolean taskExists = taskManager.getAllTasks().stream()
+                                    .map(Task::getId)
+                                    .anyMatch(id -> id == task.getId());
+
+                            if (taskExists) {
+                                taskManager.updateTask(task);
+                            } else {
+                                taskManager.addTask(task);
                             }
-                            httpExchange.sendResponseHeaders(201, 0);
+                            httpExchange.sendResponseHeaders(201, task.getId());
                         } else {
                             sendHasInteractions(httpExchange, "Задача пересекается с существующими");
                         }
@@ -137,16 +150,18 @@ public class HttpTaskServer extends BaseHttpHandler {
                         if (Pattern.matches("^/api/v1/epics$", path)) {
                             String response = readText(httpExchange);
                             Epic epic = gson.fromJson(response, Epic.class);
-                            if (epic != null) {
-                                if (taskManager.getAllEpics().stream().map(Epic::getId).anyMatch(id -> id == epic.getId())) {
-                                    taskManager.updateEpic(epic);
-                                } else {
-                                    taskManager.addEpic(epic);
-                                }
+                            boolean epicExists = taskManager.getAllEpics().stream()
+                                    .map(Epic::getId)
+                                    .anyMatch(id -> id == epic.getId());
+
+                            if (epicExists) {
+                                taskManager.updateTask(epic);
+                            } else {
+                                taskManager.addTask(epic);
                             }
-                            httpExchange.sendResponseHeaders(201, 0);
+                            httpExchange.sendResponseHeaders(201, epic.getId());
                         } else {
-                            httpExchange.sendResponseHeaders(405, 0);
+                            sendHasInteractions(httpExchange, "Задача пересекается с существующими");
                         }
                         break;
                     }
@@ -205,16 +220,18 @@ public class HttpTaskServer extends BaseHttpHandler {
                         if (Pattern.matches("^/api/v1/subtasks$", path)) {
                             String response = readText(httpExchange);
                             SubTask sub = gson.fromJson(response, SubTask.class);
-                            if (sub != null) {
-                                if (taskManager.getAllEpics().stream().map(Epic::getId).anyMatch(id -> id == sub.getId())) {
-                                    taskManager.updateSub(sub);
-                                } else {
-                                    taskManager.addSub(sub);
-                                }
+                            boolean subExists = taskManager.getAllSubTasks().stream()
+                                    .map(SubTask::getId)
+                                    .anyMatch(id -> id == sub.getId());
+
+                            if (subExists) {
+                                taskManager.updateTask(sub);
+                            } else {
+                                taskManager.addTask(sub);
                             }
-                            httpExchange.sendResponseHeaders(201, 0);
+                            httpExchange.sendResponseHeaders(201, sub.getId());
                         } else {
-                            sendHasInteractions(httpExchange, "Подзадача пересекается с существующими");
+                            sendHasInteractions(httpExchange, "Задача пересекается с существующими");
                         }
                         break;
                     }
